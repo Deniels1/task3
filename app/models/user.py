@@ -18,12 +18,24 @@ class Parent(Base, UUIDMixin, TimestampMixin):
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
  
     # Relationships
     children: Mapped[List["Child"]] = relationship(
         "Child",
         back_populates="parent",
         cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+    notifications: Mapped[List["Notification"]] = relationship(
+        "Notification",
+        back_populates="parent",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+    activity_logs: Mapped[List["ActivityLog"]] = relationship(
+        "ActivityLog",
+        back_populates="admin",
         lazy="selectin"
     )
  
@@ -64,4 +76,16 @@ class Child(Base, UUIDMixin, TimestampMixin):
         "Parent",
         back_populates="children",
         lazy="joined"
+    )
+    lesson_progresses: Mapped[List["LessonProgress"]] = relationship(
+        "LessonProgress",
+        back_populates="child",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+    badges: Mapped[List["Badge"]] = relationship(
+        "Badge",
+        back_populates="child",
+        cascade="all, delete-orphan",
+        lazy="selectin"
     )

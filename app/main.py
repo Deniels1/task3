@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
+from app.api.v1.router import api_v1_router
 
 
 settings = get_settings()
@@ -48,6 +49,10 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
         status_code=500,
         content={"error": str(exc)}
     )
+
+
+# Include API v1 router
+app.include_router(api_v1_router)
 
 
 # Root endpoint

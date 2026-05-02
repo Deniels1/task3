@@ -56,6 +56,11 @@ class Lesson(Base, UUIDMixin, TimestampMixin):
         cascade="all, delete-orphan",
         order_by="Exercise.order_index"
     )
+    progress_records: Mapped[List["LessonProgress"]] = relationship(
+        "LessonProgress",
+        back_populates="lesson",
+        lazy="selectin"
+    )
     
     @property
     def exercise_count(self) -> int:
@@ -84,6 +89,11 @@ class Exercise(Base, UUIDMixin, TimestampMixin):
         "Lesson",
         back_populates="exercises",
         lazy="joined"
+    )
+    results: Mapped[List["ExerciseResult"]] = relationship(
+        "ExerciseResult",
+        back_populates="exercise",
+        lazy="selectin"
     )
     
     def __repr__(self) -> str:
